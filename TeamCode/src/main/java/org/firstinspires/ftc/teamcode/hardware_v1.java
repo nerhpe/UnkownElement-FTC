@@ -120,7 +120,7 @@ public class hardware_v1
         grabClaw  = hwMap.get(Servo.class, "grab_claw");
         rotationClaw = hwMap.get(Servo.class, "rotation_claw");
         rotationArm = hwMap.get(Servo.class, "rotation_arm");
-        grabClaw.setPosition(MID_SERVO);
+        grabClaw.setPosition(.8);
         rotationClaw.setPosition(0);
         rotationArm.setPosition(0);
     }

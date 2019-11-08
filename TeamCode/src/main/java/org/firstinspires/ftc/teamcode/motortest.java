@@ -45,9 +45,10 @@ public class motortest extends OpMode
     hardware_v1 robot       = new hardware_v1();
     double          clawOffset  = 0.3 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;
-    double          arm_position = 0;
+    double          arm_position = 0.7;
     double          claw_rotation = 0.21;
     double          lift_height = 0;
+    double          claw_position;
 
 
      // Code to run ONCE when the driver hits INIT
@@ -83,7 +84,6 @@ public class motortest extends OpMode
         double back_leftPower;
         double back_rightPower;
         double intake_power = 0;
-        double thing = 0;
         double lift_power;
 
         // POV Mode uses left stick to go forward, and right stick to turn.
@@ -94,6 +94,14 @@ public class motortest extends OpMode
         front_rightPower = Range.clip(drive - turn, -1.0, 1.0);
         back_leftPower = Range.clip(drive + turn, -1.0, 1.0);
         back_rightPower = Range.clip(drive - turn, -1.0, 1.0);
+
+
+        if (gamepad1.b) {
+            robot.grabClaw.setPosition(.3);
+        } else {
+            robot.grabClaw.setPosition(.4);
+        }
+
 
         //intake controls
 
@@ -108,27 +116,28 @@ public class motortest extends OpMode
         }
 
      //claw controls
-    if (gamepad1.b) {
+ /*  if (gamepad1.b) {
         if (clawOffset != 1) {
             clawOffset = .7;
         } else if (clawOffset == 1) {
             clawOffset = 0.4;
         }
-        robot.grabClaw.setPosition(clawOffset);
+
 
     }
-
+ */
 
 
 
 //arm rotation
     if (gamepad1.a) {
-        if (arm_position == 0) {
-            arm_position = 1;
+        if (arm_position == .7) {
+            arm_position = .9;
+        } else if (arm_position == .9)
+            arm_position = .7;
         }
-            arm_position = 0;
 
-    }
+
 
 //claw rotation
         if (gamepad1.y) {
@@ -158,8 +167,8 @@ public class motortest extends OpMode
     robot.frontrightDrive.setPower(front_rightPower);
     robot.backleftDrive.setPower(back_leftPower);
     robot.backrightDrive.setPower(back_rightPower);
-    robot.rotationArm.setPosition(arm_position);
-    robot.rotationClaw.setPosition(claw_rotation);
+    robot.rotationClaw.setPosition(arm_position);
+    robot.grabClaw.setPosition(arm_position);
     robot.liftControl.setPower(lift_power);
 
     // Show the elapsed game time and wheel power.
