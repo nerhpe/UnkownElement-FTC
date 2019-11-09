@@ -46,9 +46,9 @@ public class motortest extends OpMode
     double          clawOffset  = 0.3 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;
     double          arm_position = 0.7;
-    double          claw_rotation = 0.21;
+    double          claw_rotation = 0.22;
     double          lift_height = 0;
-    double          claw_position;
+    double          claw_position = .3;
 
 
      // Code to run ONCE when the driver hits INIT
@@ -59,6 +59,7 @@ public class motortest extends OpMode
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
         robot.rotationClaw.setPosition(claw_rotation);
+        robot.grabClaw.setPosition(claw_position);
     }
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -83,7 +84,7 @@ public class motortest extends OpMode
         double front_rightPower;
         double back_leftPower;
         double back_rightPower;
-        double intake_power = 0;
+        double intake_power;
         double lift_power;
 
         // POV Mode uses left stick to go forward, and right stick to turn.
@@ -94,14 +95,6 @@ public class motortest extends OpMode
         front_rightPower = Range.clip(drive - turn, -1.0, 1.0);
         back_leftPower = Range.clip(drive + turn, -1.0, 1.0);
         back_rightPower = Range.clip(drive - turn, -1.0, 1.0);
-
-
-        if (gamepad1.b) {
-            robot.grabClaw.setPosition(.3);
-        } else {
-            robot.grabClaw.setPosition(.4);
-        }
-
 
         //intake controls
 
@@ -115,39 +108,30 @@ public class motortest extends OpMode
             intake_power = 0;
         }
 
-     //claw controls
- /*  if (gamepad1.b) {
-        if (clawOffset != 1) {
-            clawOffset = .7;
-        } else if (clawOffset == 1) {
-            clawOffset = 0.4;
-        }
+     //claw rotation
+if (gamepad2.b) {
+    claw_rotation = 0.4;
+}
 
-
-    }
- */
-
-
-
+if (gamepad2.a) {
+    claw_rotation = 0.3;
+}
 //arm rotation
-    if (gamepad1.a) {
-        if (arm_position == .7) {
-            arm_position = .9;
-        } else if (arm_position == .9)
-            arm_position = .7;
-        }
 
+if (gamepad2.x) {
+    arm_position = .5;
+}
 
+if (gamepad2.y) {
+    arm_position = .4;
+}
 
-//claw rotation
-        if (gamepad1.y) {
-            if (claw_rotation == 0.21) {
-                claw_rotation = .8;
-            }
-                claw_rotation = 0.21;
-
-        }
-
+if (gamepad2.dpad_right) {
+    arm_position += .02;
+} else if (gamepad2.dpad_left) {
+    arm_position -= .02;
+}
+arm_position = Range.clip(arm_position, .4, .5);
 //lift control
 
         if (gamepad1.dpad_up) {
@@ -160,6 +144,15 @@ public class motortest extends OpMode
             lift_power = 0;
         }
 
+//claw grabbing control
+if (gamepad2.right_bumper) {
+    clawOffset += .02;
+}
+if (gamepad2.left_bumper) {
+    clawOffset -= .02;
+}
+
+clawOffset = Range.clip(clawOffset, .1, .4);
 
     // Send calculated power to wheels
 
@@ -167,8 +160,9 @@ public class motortest extends OpMode
     robot.frontrightDrive.setPower(front_rightPower);
     robot.backleftDrive.setPower(back_leftPower);
     robot.backrightDrive.setPower(back_rightPower);
-    robot.rotationClaw.setPosition(arm_position);
-    robot.grabClaw.setPosition(arm_position);
+    robot.rotationClaw.setPosition(claw_rotation);
+    robot.grabClaw.setPosition(clawOffset);
+    robot.rotationArm.setPosition(arm_position);
     robot.liftControl.setPower(lift_power);
 
     // Show the elapsed game time and wheel power.
@@ -176,7 +170,7 @@ public class motortest extends OpMode
     telemetry.addData("Motors", "fleft (%.2f), fright (%.2f), bleft (%.2f), bright (%.2f)", front_leftPower, front_rightPower, back_leftPower, back_rightPower);
     telemetry.addData("Claw", "power (%.2f)", clawOffset);
     telemetry.addData("Intake Power", "power (%.2f)", intake_power);
-    telemetry.addData("Claw Rotation", "Position (%.2f)  ", claw_rotation);
+    telemetry.addData("Claw Rotation", "Position (%.2f)  ", claw_position);
     telemetry.addData("Arm Position", "Position (%.2f)", arm_position);
     telemetry.addData("Lift Height", "Lift Height (%.2f)", lift_height);
     }
