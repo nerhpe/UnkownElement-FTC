@@ -127,17 +127,17 @@ if (gamepad2.y) {
 }
 
 if (gamepad2.dpad_right) {
-    arm_position += .02;
+    arm_position += .002;
 } else if (gamepad2.dpad_left) {
-    arm_position -= .02;
+    arm_position -= .002;
 }
 arm_position = Range.clip(arm_position, .4, .5);
 //lift control
 
-        if (gamepad1.dpad_up) {
+        if (gamepad2.dpad_up) {
             lift_height += 0.1;
             lift_power = 0.1;
-        } else if (gamepad1.dpad_down) {
+        } else if (gamepad2.dpad_down) {
             lift_height -= 0.1;
             lift_power = -0.1;
         } else {
@@ -146,10 +146,10 @@ arm_position = Range.clip(arm_position, .4, .5);
 
 //claw grabbing control
 if (gamepad2.right_bumper) {
-    clawOffset += .02;
+    clawOffset += .005;
 }
 if (gamepad2.left_bumper) {
-    clawOffset -= .02;
+    clawOffset -= .01;
 }
 
 clawOffset = Range.clip(clawOffset, .1, .4);
@@ -170,7 +170,7 @@ clawOffset = Range.clip(clawOffset, .1, .4);
     telemetry.addData("Motors", "fleft (%.2f), fright (%.2f), bleft (%.2f), bright (%.2f)", front_leftPower, front_rightPower, back_leftPower, back_rightPower);
     telemetry.addData("Claw", "power (%.2f)", clawOffset);
     telemetry.addData("Intake Power", "power (%.2f)", intake_power);
-    telemetry.addData("Claw Rotation", "Position (%.2f)  ", claw_position);
+    telemetry.addData("Claw Rotation", "Position (%.2f)  ", claw_rotation);
     telemetry.addData("Arm Position", "Position (%.2f)", arm_position);
     telemetry.addData("Lift Height", "Lift Height (%.2f)", lift_height);
     }
